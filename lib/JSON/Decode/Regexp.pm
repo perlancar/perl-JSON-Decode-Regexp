@@ -142,6 +142,6 @@ features like named capture and recursive pattern.
 
 =head1 SEE ALSO
 
-L<JSON>, L<JSON::PP>, J<JSON::XS>, L<JSON::Tiny>.
+L<JSON>, L<JSON::PP>, L<JSON::XS>, L<JSON::Tiny>.
 
 =cut
