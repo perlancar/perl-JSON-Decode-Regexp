@@ -14,6 +14,8 @@ is_deeply(from_json(q(null)), undef, "scalar (null)");
 
 is_deeply(from_json(q(2)), 2, "scalar (num)");
 
+is_deeply(from_json(q( "a" )), "a", "whitespaces between value");
+
 ok(from_json(q(true)), "scalar (bool, true)");
 
 ok(!from_json(q(false)), "scalar (bool, false)");

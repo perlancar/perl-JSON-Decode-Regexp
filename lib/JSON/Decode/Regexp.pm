@@ -49,6 +49,7 @@ our $FROM_JSON = qr{
 )
 
 (?<VALUE>
+  \s*
   (
       (?&STRING)
     |
@@ -64,6 +65,7 @@ our $FROM_JSON = qr{
   |
     null (?{ [$^R, undef] })
   )
+  \s*
 )
 
 (?<STRING>
