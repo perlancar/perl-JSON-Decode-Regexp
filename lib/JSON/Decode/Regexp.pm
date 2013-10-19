@@ -32,7 +32,7 @@ our $FROM_JSON = qr{
 
 (?<KV>
   (?&STRING) # [$^R, "string"]
-  : (?&VALUE) # [[$^R, "string"], $value]
+  \s*:\s* (?&VALUE) # [[$^R, "string"], $value]
   (?{ # warn Dumper { kv => $^R };
      [$^R->[0][0], $^R->[0][1], $^R->[1]] })
 )
@@ -41,7 +41,7 @@ our $FROM_JSON = qr{
   (?{ [$^R, []] })
   \[
     (?: (?&VALUE) (?{ [$^R->[0][0], [$^R->[1]]] })
-      (?: , (?&VALUE) (?{ # warn Dumper { atwo => $^R };
+      (?: \s*,\s* (?&VALUE) (?{ # warn Dumper { atwo => $^R };
 			 [$^R->[0][0], [@{$^R->[0][1]}, $^R->[1]]] })
       )*
     )?
@@ -49,7 +49,6 @@ our $FROM_JSON = qr{
 )
 
 (?<VALUE>
-  \s*
   (
       (?&STRING)
     |
@@ -65,7 +64,6 @@ our $FROM_JSON = qr{
   |
     null (?{ [$^R, undef] })
   )
-  \s*
 )
 
 (?<STRING>
@@ -102,7 +100,7 @@ sub from_json {
     local $^R;
     eval { m{\A$FROM_JSON\z}; } and return $_;
     die $@ if $@;
-    return 'no match';
+    die 'no match';
 }
 
 1;
@@ -116,7 +114,8 @@ sub from_json {
 
 =head1 DESCRIPTION
 
-This module is a packaging of Randal L. Schwartz' code originally posted at:
+This module is a packaging of Randal L. Schwartz' code (with minor modification)
+originally posted at:
 
  http://perlmonks.org/?node_id=995856
 
