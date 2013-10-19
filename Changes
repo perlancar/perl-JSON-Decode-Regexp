@@ -1,5 +1,10 @@
 Revision history for JSON-Decode-Regexp
 
+0.02    2013-10-19 (SHARYANTO)
+
+        - Minor tweak to regex.
+
+
 0.01    2013-10-19 (SHARYANTO)
 
         - First release.
