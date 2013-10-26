@@ -4,6 +4,8 @@ use 5.010001;
 use strict;
 use warnings;
 
+#use Data::Dumper;
+
 require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(from_json);
@@ -21,9 +23,11 @@ our $FROM_JSON = qr{
   \{
     (?: (?&KV) # [[$^R, {}], $k, $v]
       (?{ # warn Dumper { obj1 => $^R };
+          die "Duplicate key '$^R->[1]'" if exists $^R->[0][1]->{$^R->[1]};
 	 [$^R->[0][0], {$^R->[1] => $^R->[2]}] })
       (?: , (?&KV) # [[$^R, {...}], $k, $v]
         (?{ # warn Dumper { obj2 => $^R };
+            die "Duplicate key '$^R->[1]'" if exists $^R->[0][1]->{$^R->[1]};
 	   [$^R->[0][0], {%{$^R->[0][1]}, $^R->[1] => $^R->[2]}] })
       )*
     )?
