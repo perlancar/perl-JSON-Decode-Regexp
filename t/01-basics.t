@@ -14,8 +14,6 @@ is_deeply(from_json(q(null)), undef, "scalar (null)");
 
 is_deeply(from_json(q(2)), 2, "scalar (num)");
 
-is_deeply(from_json(q( "a" )), "a", "whitespaces between value");
-
 ok(from_json(q(true)), "scalar (bool, true)");
 
 ok(!from_json(q(false)), "scalar (bool, false)");
@@ -28,9 +26,9 @@ is_deeply(from_json(q({"a":1,"b":2})),
           {a=>1, b=>2},
           "simple hash");
 
-is_deeply(from_json(q([null,"", "a\nb c" ,2 , -3, 4.5, [], [1, "a", []], {}, {"0":null,"1":1,"b" :"b","c": [],"d" : {}}])),
+is_deeply(from_json(q( [null,"", "a\nb c" ,2 , -3, 4.5, [ ], [ 1, "a" , [] ], { }, { "0":null ,"1":1, "b" :"b" , "c": [],"d" : {} }] )),
           [undef, "", "a\nb c", 2, -3, 4.5, [], [1, "a", []], {}, {0=>undef, 1=>1, b=>"b", c=>[], d=>{}}],
-          "more comprehensive test");
+          "more comprehensive test (whitespaces)");
 
 dies_ok { from_json(q([)) } "invalid 1";
 dies_ok { from_json(q(})) } "invalid 2";
