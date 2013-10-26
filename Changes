@@ -1,8 +1,13 @@
 Revision history for JSON-Decode-Regexp
 
+0.03    2013-10-26 (SHARYANTO)
+
+        - Minor tweak to regex: allow more whitespaces.
+
+
 0.02    2013-10-19 (SHARYANTO)
 
-        - Minor tweak to regex.
+        - Minor tweak to regex: allow whitespaces between ":".
 
 
 0.01    2013-10-19 (SHARYANTO)
