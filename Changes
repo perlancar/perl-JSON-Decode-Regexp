@@ -1,5 +1,13 @@
 Revision history for JSON-Decode-Regexp
 
+0.05    2016-02-18 (PERLANCAR)
+
+	- No functional changes.
+
+	- Tweak description and FAQ item (note about performance as of
+	  0.04), mention some other JSON modules.
+
+
 0.04    2016-02-18 (PERLANCAR)
 
 	- [Optimization] reuse previous array/hash when building
