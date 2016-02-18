@@ -25,11 +25,9 @@ our $FROM_JSON = qr{
     (?{ print "D:obj: "; dd [$^R, {}] })
     (?: (?&KV) # [[$^R, {}], $k, $v]
       (?{ # warn Dumper { obj1 => $^R };
-          die "Duplicate key '$^R->[1]'" if exists $^R->[0][1]->{$^R->[1]};
 	 print "D:obj first kv: \$^R = "; dd $^R; print "  "; dd [$^R->[0][0], {$^R->[1] => $^R->[2]}] })
       (?: \s*,\s* (?&KV) # [[$^R, {...}], $k, $v]
         (?{ # warn Dumper { obj2 => $^R };
-            die "Duplicate key '$^R->[1]'" if exists $^R->[0][1]->{$^R->[1]};
 	   print "D:obj next kv: \$^R = "; dd $^R; print "  "; dd [$^R->[0][0], {%{$^R->[0][1]}, $^R->[1] => $^R->[2]}] })
       )*
     )?
