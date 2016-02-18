@@ -28,7 +28,9 @@ our $FROM_JSON = qr{
 	 print "D:obj first kv: \$^R = "; dd $^R; print "  "; dd [$^R->[0][0], {$^R->[1] => $^R->[2]}] })
       (?: \s*,\s* (?&KV) # [[$^R, {...}], $k, $v]
         (?{ # warn Dumper { obj2 => $^R };
-	   print "D:obj next kv: \$^R = "; dd $^R; print "  "; dd [$^R->[0][0], {%{$^R->[0][1]}, $^R->[1] => $^R->[2]}] })
+	   print "D:obj next kv: \$^R = "; dd $^R;
+           $^R->[0][1]{ $^R->[1] } = $^R->[2];
+           print "  "; dd $^R->[0] })
       )*
     )?
   \s*\}
@@ -46,7 +48,9 @@ our $FROM_JSON = qr{
     (?{ print "D:array: "; dd [$^R, []] })
     (?: (?&VALUE) (?{ print "D:array 1st elem: \$^R = "; dd $^R; print "  "; dd [$^R->[0][0], [$^R->[1]]] })
       (?: \s*,\s* (?&VALUE) (?{ # warn Dumper { atwo => $^R };
-			 print "D: array next elem: \$^R = "; dd $^R; print "  "; dd [$^R->[0][0], [@{$^R->[0][1]}, $^R->[1]]] })
+			 print "D: array next elem: \$^R = "; dd $^R;
+                         push @{$^R->[0][1]}, $^R->[1];
+                         print "  "; dd $^R->[0] })
       )*
     )?
   \s*\]
