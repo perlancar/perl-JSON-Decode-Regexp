@@ -1,5 +1,23 @@
 Revision history for JSON-Decode-Regexp
 
+0.04    2016-02-18 (PERLANCAR)
+
+	- [Optimization] reuse previous array/hash when building
+	  array/object, this results in several times of speed increase
+	  when parsing longer arrays/objects.
+
+	- [Optimization] Move embedded code for object/array after '{'/'['
+	  to avoid repeated execution.
+
+	- [Optimization] We don't need to eval number, just use 0 + $^N.
+
+	- Remove code that checks for duplicate key when specifying object
+	  (JSON allows it).
+
+	- Add JSON::Decode::RegexpDebug (not included in build, see the git repo
+          directly).
+
+
 0.03    2013-10-26 (SHARYANTO)
 
         - Minor tweak to regex: allow more whitespaces.
