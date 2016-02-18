@@ -1,5 +1,8 @@
 package JSON::Decode::Regexp;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
@@ -9,8 +12,6 @@ use warnings;
 require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(from_json);
-
-# VERSION
 
 our $FROM_JSON = qr{
 
@@ -96,7 +97,7 @@ our $FROM_JSON = qr{
     (?: [eE] [-+]? \d+ )?
   )
 
-  (?{ [$^R, eval $^N] })
+  (?{ [$^R, 0+$^N] })
 )
 
 ) }xms;
