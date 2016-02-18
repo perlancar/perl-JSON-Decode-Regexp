@@ -121,7 +121,7 @@ sub from_json {
 
 =head1 DESCRIPTION
 
-This module is a packaging of Randal L. Schwartz' code (with minor modification)
+This module is a packaging of Randal L. Schwartz' code (with some modification)
 originally posted at:
 
  http://perlmonks.org/?node_id=995856
@@ -140,15 +140,25 @@ Decode JSON in C<$str>. Dies on error.
 
 =head2 How does this module compare to other JSON modules on CPAN?
 
-This module is rather slower than JSON::PP, does not support Unicode, and does
-not pinpoint exact location on parse error. But it is a cool hack and
-demonstrates the power of Perl regular expressions. It does not require any
-non-core module. It requires Perl 5.10 at the minimum because it utilizes regex
-features like named capture and recursive pattern.
+As of version 0.04, performance-wise this module quite on par with L<JSON::PP>
+(faster on strings and longer arrays/objects, slower on simpler JSON) and a bit
+slower than L<JSON::Tiny>. And of course all three are much slower than XS-based
+modules like L<JSON::XS>.
+
+JSON::Decode::Regexp does not yet support Unicode, and does not pinpoint exact
+location on parse error.
+
+In general, I don't see a point in using it in production (I recommend instead
+L<JSON::XS> or L<Cpanel::JSON::XS> if you can use XS modules, or L<JSON::Tiny>
+if you must use pure Perl modules). But it is a cool hack that demonstrates the
+power of Perl regular expressions and beautiful code.
 
 
 =head1 SEE ALSO
 
-L<JSON>, L<JSON::PP>, L<JSON::XS>, L<JSON::Tiny>.
+Pure-perl modules: L<JSON::Tiny>, L<JSON::PP>, L<Pegex::JSON>,
+L<JSON::Decode::Marpa>.
+
+XS modules: L<JSON::XS>, L<Cpanel::JSON::XS>.
 
 =cut
