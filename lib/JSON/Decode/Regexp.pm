@@ -19,8 +19,8 @@ our $FROM_JSON = qr{
 (?(DEFINE)
 
 (?<OBJECT>
-  (?{ [$^R, {}] })
   \{\s*
+    (?{ [$^R, {}] })
     (?: (?&KV) # [[$^R, {}], $k, $v]
       (?{ # warn Dumper { obj1 => $^R };
           die "Duplicate key '$^R->[1]'" if exists $^R->[0][1]->{$^R->[1]};
@@ -42,8 +42,8 @@ our $FROM_JSON = qr{
 )
 
 (?<ARRAY>
-  (?{ [$^R, []] })
   \[\s*
+    (?{ [$^R, []] })
     (?: (?&VALUE) (?{ [$^R->[0][0], [$^R->[1]]] })
       (?: \s*,\s* (?&VALUE) (?{ # warn Dumper { atwo => $^R };
 			 [$^R->[0][0], [@{$^R->[0][1]}, $^R->[1]]] })
