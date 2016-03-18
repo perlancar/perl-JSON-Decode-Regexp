@@ -13,62 +13,95 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(from_json);
 
+sub _fail { die __PACKAGE__.": $_[0] at offset ".pos()."\n" }
+
 our $FROM_JSON = qr{
 
-(?&VALUE) (?{ $_ = $^R->[1] })
+(?:
+    (?&VALUE) (?{ $_ = $^R->[1] })
+|
+    \z (?{ _fail "Unexpected end of input" })
+|
+      (?{ _fail "Invalid literal" })
+)
 
 (?(DEFINE)
 
 (?<OBJECT>
   \{\s*
     (?{ [$^R, {}] })
-    (?: (?&KV) # [[$^R, {}], $k, $v]
-      (?{ # warn Dumper { obj1 => $^R };
-	 [$^R->[0][0], {$^R->[1] => $^R->[2]}] })
-      (?: \s*,\s* (?&KV) # [[$^R, {...}], $k, $v]
-        (?{ # warn Dumper { obj2 => $^R };
-           $^R->[0][1]{ $^R->[1] } = $^R->[2];
-           $^R->[0] })
-      )*
+    (?:
+        (?&KV) # [[$^R, {}], $k, $v]
+        (?{ [$^R->[0][0], {$^R->[1] => $^R->[2]}] })
+        \s*
+        (?:
+            (?:
+                ,\s* (?&KV) # [[$^R, {...}], $k, $v]
+                (?{ $^R->[0][1]{ $^R->[1] } = $^R->[2]; $^R->[0] })
+            )*
+        |
+            (?:[^,\}]|\z) (?{ _fail "Expected ',' or '\x7d'" })
+        )*
     )?
-  \s*\}
+    \s*
+    (?:
+        \}
+    |
+        (?:.|\z) (?{ _fail "Expected closing of hash" })
+    )
 )
 
 (?<KV>
   (?&STRING) # [$^R, "string"]
-  \s*:\s* (?&VALUE) # [[$^R, "string"], $value]
-  (?{ # warn Dumper { kv => $^R };
-     [$^R->[0][0], $^R->[0][1], $^R->[1]] })
+  \s*
+  (?:
+      :\s* (?&VALUE) # [[$^R, "string"], $value]
+      (?{ [$^R->[0][0], $^R->[0][1], $^R->[1]] })
+  |
+      (?:[^:]|\z) (?{ _fail "Expected ':'" })
+  )
 )
 
 (?<ARRAY>
   \[\s*
-    (?{ [$^R, []] })
-    (?: (?&VALUE) (?{ [$^R->[0][0], [$^R->[1]]] })
-      (?: \s*,\s* (?&VALUE) (?{ # warn Dumper { atwo => $^R };
-                         push @{$^R->[0][1]}, $^R->[1];
-			 $^R->[0] })
-      )*
-    )?
-  \s*\]
+  (?{ [$^R, []] })
+  (?:
+      (?&VALUE) # [[$^R, []], $val]
+      (?{ [$^R->[0][0], [$^R->[1]]] })
+      \s*
+      (?:
+          (?:
+              ,\s* (?&VALUE)
+              (?{ push @{$^R->[0][1]}, $^R->[1]; $^R->[0] })
+          )*
+      |
+          (?: [^,\]]|\z ) (?{ _fail "Expected ',' or '\x5d'" })
+      )
+  )?
+  \s*
+  (?:
+      \]
+  |
+      (?:.|\z) (?{ _fail "Expected closing of array" })
+  )
 )
 
 (?<VALUE>
   \s*
   (
       (?&STRING)
-    |
+  |
       (?&NUMBER)
-    |
+  |
       (?&OBJECT)
-    |
+  |
       (?&ARRAY)
-    |
-    true (?{ [$^R, 1] })
   |
-    false (?{ [$^R, 0] })
+      true (?{ [$^R, 1] })
   |
-    null (?{ [$^R, undef] })
+      false (?{ [$^R, 0] })
+  |
+      null (?{ [$^R, undef] })
   )
   \s*
 )
@@ -77,13 +110,19 @@ our $FROM_JSON = qr{
   (
     "
     (?:
-      [^\\"]+
+        [^\\"]+
     |
-      \\ ["\\/bfnrt]
+        \\ ["\\/bfnrt]
 #    |
 #      \\ u [0-9a-fA-f]{4}
+    |
+        \\ . (?{ _fail "Invalid string escape character" })
     )*
-    "
+    (?:
+        "
+    |
+        (?:\\|\z) (?{ _fail "Expected closing of string" })
+    )
   )
 
   (?{ [$^R, eval $^N] })
