@@ -1,5 +1,15 @@
 Revision history for JSON-Decode-Regexp
 
+0.06    2016-03-18 (PERLANCAR)
+
+        - Add some error messages so parsing failure does not just return with
+          'No match' but shows more detailed error messages and input position.
+          This unfortunately slows down parsing a bit (~30% for short and simple
+          input, but for more complex input & longer hash/array the overall
+          overhead becomes smaller e.g. < 1% because the bottleneck is no longer
+          the parsing but the data structure building.
+
+
 0.05    2016-02-18 (PERLANCAR)
 
 	- No functional changes.
