@@ -142,9 +142,11 @@ our $FROM_JSON = qr{
 ) }xms;
 
 sub from_json {
+    state $re = qr{\A$FROM_JSON\z};
+
     local $_ = shift;
     local $^R;
-    eval { m{\A$FROM_JSON\z}; } and return $_;
+    eval { $_ =~ $re } and return $_;
     die $@ if $@;
     die 'no match';
 }
