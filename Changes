@@ -38,7 +38,7 @@ Revision history for JSON-Decode-Regexp
 	  (JSON allows it).
 
 	- Add JSON::Decode::RegexpDebug (not included in build, see the git repo
-          directly).
+          directly). UPDATE: removed in 0.06.
 
 
 0.03    2013-10-26 (SHARYANTO)
