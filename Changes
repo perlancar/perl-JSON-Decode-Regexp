@@ -4,9 +4,9 @@ Revision history for JSON-Decode-Regexp
 
 	- Grok hex and octal escape in string.
 
-	- [security] Do not use Perl's eval() to avoid arbitrary code
-	  execution via perl quoting, e.g. this JSON '"@{[1+1]}"' (reported
-	  by Андрей Шедько/ayshedko).
+	- [security] Do not use Perl's eval() for decoding string, to avoid
+	  arbitrary code execution via perl quoting, e.g. this JSON '"@{[1+1]}"'
+	  (reported by Андрей Шедько/ayshedko).
 
 
 0.08    2016-03-31 (PERLANCAR)
