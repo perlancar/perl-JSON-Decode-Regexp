@@ -27,7 +27,11 @@ my %escape_codes = (
 
 sub _decode_str {
     my $str = shift;
-    $str =~ s[(\\(.))][$escape_codes{$2} ? $escape_codes{$2} : $1]eg;
+    $str =~ s[(\\(?:([0-7]{1,3})|x([0-9A-Fa-f]{1,2})|(.)))]
+             [defined($2) ? chr(oct $2) :
+                  defined($3) ? chr(hex $3) :
+                      $escape_codes{$4} ? $escape_codes{$4} :
+                          $1]eg;
     $str;
 }
 
@@ -127,6 +131,10 @@ our $FROM_JSON = qr{
     (
         (?:
             [^\\"]+
+        |
+            \\ [0-7]{1,3}
+        |
+            \\ x [0-9A-Fa-f]{1,2}
         |
             \\ ["\\/bfnrt]
         #|

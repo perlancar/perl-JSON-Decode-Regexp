@@ -25,8 +25,13 @@ subtest "string" => sub {
     is(from_json(q("a\b")), "a\b");
     is(from_json(q("a\\\b")), "a\\b");
     is(from_json(q("\f\n\r\t\"")), "\f\n\r\t\"");
-    is(from_json(q("@{[1+1]}")), '@{[1+1]}');
-    dies_ok { from_json(q("\x")) } "invalid escape character-> dies";
+    dies_ok { from_json(q("\y")) } "invalid escape character-> dies";
+
+    is(from_json(q("\0")), "\0");
+    is(from_json(q("\33")), "\e");
+    is(from_json(q("\x1b")), "\e");
+
+    is(from_json(q("@{[1+1]}")), '@{[1+1]}', 'perl quoting not evaluated');
 };
 
 is_deeply(from_json(q([null,1,-2,"3","four"])),
