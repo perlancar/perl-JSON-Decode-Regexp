@@ -18,6 +18,17 @@ ok(from_json(q(true)), "scalar (bool, true)");
 
 ok(!from_json(q(false)), "scalar (bool, false)");
 
+subtest "string" => sub {
+    dies_ok { from_json(q(")) } "unclosed quote -> dies";
+    is(from_json(q("")), "");
+    is(from_json(q("a bc")), "a bc");
+    is(from_json(q("a\b")), "a\b");
+    is(from_json(q("a\\\b")), "a\\b");
+    is(from_json(q("\f\n\r\t\"")), "\f\n\r\t\"");
+    is(from_json(q("@{[1+1]}")), '@{[1+1]}');
+    dies_ok { from_json(q("\x")) } "invalid escape character-> dies";
+};
+
 is_deeply(from_json(q([null,1,-2,"3","four"])),
           [undef, 1, -2, 3, "four"],
           "simple array");

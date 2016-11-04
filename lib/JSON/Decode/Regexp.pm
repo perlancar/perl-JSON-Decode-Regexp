@@ -15,6 +15,22 @@ our @EXPORT_OK = qw(from_json);
 
 sub _fail { die __PACKAGE__.": $_[0] at offset ".pos()."\n" }
 
+my %escape_codes = (
+    "\\" => "\\",
+    "\"" => "\"",
+    "b" => "\b",
+    "f" => "\f",
+    "n" => "\n",
+    "r" => "\r",
+    "t" => "\t",
+);
+
+sub _decode_str {
+    my $str = shift;
+    $str =~ s[(\\(.))][$escape_codes{$2} ? $escape_codes{$2} : $1]eg;
+    $str;
+}
+
 our $FROM_JSON = qr{
 
 (?:
@@ -107,25 +123,25 @@ our $FROM_JSON = qr{
 )
 
 (?<STRING>
-  (
     "
-    (?:
-        [^\\"]+
-    |
-        \\ ["\\/bfnrt]
-#    |
-#      \\ u [0-9a-fA-f]{4}
-    |
-        \\ . (?{ _fail "Invalid string escape character" })
-    )*
+    (
+        (?:
+            [^\\"]+
+        |
+            \\ ["\\/bfnrt]
+        #|
+        #    \\ u [0-9a-fA-f]{4}
+        |
+            \\ (.) (?{ _fail "Invalid string escape character $^N" })
+        )*
+    )
     (?:
         "
     |
         (?:\\|\z) (?{ _fail "Expected closing of string" })
     )
-  )
 
-  (?{ [$^R, eval $^N] })
+  (?{ [$^R, _decode_str($^N)] })
 )
 
 (?<NUMBER>
