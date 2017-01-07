@@ -1,5 +1,3 @@
-Revision history for JSON-Decode-Regexp
-
 0.09    2016-11-04 (PERLANCAR)
 
 	- Grok hex and octal escape in string.
