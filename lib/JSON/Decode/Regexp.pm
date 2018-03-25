@@ -221,9 +221,17 @@ power of Perl regular expressions and beautiful code.
 
 =head1 SEE ALSO
 
+=head2 Other modules to decode JSON
+
 Pure-perl modules: L<JSON::Tiny>, L<JSON::PP>, L<Pegex::JSON>,
 L<JSON::Decode::Marpa>.
 
 XS modules: L<JSON::XS>, L<Cpanel::JSON::XS>.
+
+=head2 Other modules related to regexps for parsing JSON
+
+L<Regexp::Pattern::JSON>
+
+L<Regexp::Common::json>
 
 =cut
