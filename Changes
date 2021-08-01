@@ -1,3 +1,9 @@
+0.102   2021-08-01  Released-By: PERLANCAR; Urgency: medium
+
+	- Bump perl minimum version from 5.10.1 to 5.14.4 because CPAN
+	  Testers reports failures with <= 5.12.5 (RT#138217).
+
+
 0.101   2018-03-25  Released-By: PERLANCAR
 
 	- No functional changes.
