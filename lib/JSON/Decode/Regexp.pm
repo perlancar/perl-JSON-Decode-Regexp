@@ -1,9 +1,11 @@
 package JSON::Decode::Regexp;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
-use 5.010001;
+use 5.014004;
 use strict;
 use warnings;
 
